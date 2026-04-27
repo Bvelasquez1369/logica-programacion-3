@@ -3,13 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factorial</title>
+    <title>Calculadora de Factorial</title>
+    <style>
+        :root {
+            --color-fondo: #12121c;
+            --color-superficie: #1e1e2f;
+            --color-primario: #00e5a0;
+            --color-primario-hover: #00c78a;
+            --color-texto: #e0e0e0;
+            --color-texto-claro: #b0b0c0;
+            --sombra-suave: 0 10px 30px rgba(0, 0, 0, 0.4);
+            --borde-redondeado: 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            color: var(--color-texto);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .contenedor {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .tarjeta {
+            background: var(--color-superficie);
+            border-radius: var(--borde-redondeado);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--sombra-suave);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tarjeta:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 229, 160, 0.15);
+        }
+
+        .titulo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--color-primario), #00b8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .descripcion {
+            color: var(--color-texto-claro);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .grupo-entrada {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .campo-numero {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid transparent;
+            border-radius: 3rem;
+            background: #262638;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .campo-numero::placeholder {
+            color: #6c6c80;
+        }
+
+        .campo-numero:focus {
+            border-color: var(--color-primario);
+            box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.2);
+        }
+
+        .boton {
+            background: var(--color-primario);
+            color: #0a0a10;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(0, 229, 160, 0.3);
+        }
+
+        .boton:hover {
+            background: var(--color-primario-hover);
+            transform: scale(1.02);
+        }
+
+        .boton:active {
+            transform: scale(0.97);
+        }
+
+        .resultado {
+            margin-top: 1.8rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 1rem;
+            background: rgba(0, 229, 160, 0.08);
+            border-left: 5px solid var(--color-primario);
+            color: var(--color-texto);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            word-break: break-word;
+        }
+
+        .resultado-oculto {
+            display: none;
+        }
+
+        .resultado-visible {
+            animation: aparecer 0.5s ease forwards;
+        }
+
+        .mensaje-error {
+            margin-top: 1.5rem;
+            color: #ff6b6b;
+            font-weight: 500;
+            display: none;
+        }
+
+        @keyframes aparecer {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .simbolo-factorial {
+            font-weight: 700;
+            color: var(--color-primario);
+            font-size: 1.3rem;
+        }
+
+        .desglose {
+            color: var(--color-texto-claro);
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .creditos {
+            margin-top: 1.5rem;
+            color: var(--color-texto-claro);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        @media (max-width: 500px) {
+            .tarjeta {
+                padding: 2rem 1.5rem;
+            }
+            .boton {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Calculadora de Factorial</h1>
-    <p>El factorial de un número entero positivo <strong>n</strong> es el producto de todos los enteros desde 1 hasta n.</p>
-    <div id="resultado" style="margin-top:20px; font-size:1.2em;"></div>
-
+    <div class="contenedor">
+        <div class="tarjeta">
+            <h1 class="titulo">°n! Factorial</h1>
+            <p class="descripcion">
+                El factorial de un número entero positivo <strong>n</strong> es el producto de todos los enteros desde 1 hasta n.
+            </p>
+            <div class="grupo-entrada">
+                <input type="number" id="numeroIngresado" class="campo-numero" placeholder="Ingresa un número, ej: 5" min="0">
+                <button id="botonCalcular" class="boton">Calcular</button>
+            </div>
+            <div id="contenedorResultado" class="resultado resultado-oculto">
+            </div>
+            <div id="mensajeError" class="mensaje-error"></div>
+            <p class="creditos">💚</p>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
